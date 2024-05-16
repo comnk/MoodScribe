@@ -31,7 +31,7 @@ def registration():
     message = ''
 
     if ("email" in session):
-        return redirect(url_for("logged_in"))
+        return redirect(url_for("logged_in", user_in_app=True))
     if (request.method == "POST"):
         user = request.form.get("fullname")
         email = request.form.get("email")
@@ -60,7 +60,7 @@ def registration():
             user_name = records.find_one({"name":user})
             new_user = user_name["name"]
 
-            return render_template("logged_in.html", user_name=new_user)
+            return render_template("logged_in.html", user_name=new_user, user_in_app=True)
 
     return render_template('registration.html')
 
@@ -69,7 +69,7 @@ def login():
     message = 'Please log into account'
 
     if ("email" in session):
-        return redirect(url_for("logged_in"))
+        return redirect(url_for("logged_in", user_in_app=True))
     
     if (request.method == "POST"):
         email = request.form.get("email")
@@ -82,7 +82,7 @@ def login():
 
             if (bcrypt.checkpw(password.encode('utf-8'), password_check)):
                 session['email'] = email_val
-                return redirect(url_for("logged_in", user_name=email_val))
+                return redirect(url_for("logged_in", user_name=email_val, user_in_app=True))
             else:
                 if (email in session):
                     return redirect(url_for("logged_in"))

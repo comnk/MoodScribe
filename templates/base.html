@@ -6,7 +6,11 @@
     <title>{% block title %}{%endblock %}</title>
 </head>
 <body>
-    {% include 'navbar_visit.html' %}
+    {% if user_in_app  %}
+        {% include 'navbar_visit.html' %}
+    {% else %}
+        {% include 'navbar_visit.html' %}
+    {% endif %}
 
     {% block content %}
 
