@@ -14,6 +14,7 @@ def logged_in():
         email = session["email"]
         user_entries = entries.find({"user_id": email})
         entries_list = list(user_entries)
+        entries_list.reverse()
         return render_template("logged_in.html", user_name=email, entries=entries_list)
     else:
         return redirect(url_for("login"))
@@ -26,7 +27,7 @@ def new_entry():
             entry_data = {
                 "user_id": session["email"],
                 "date": str(datetime.now()),
-                "number-rating": request.form.get("one-number"),
+                "rating": request.form.get("one-number"),
                 "mood": request.form.get("mood"),
                 "content": request.form.get("content")
             }
@@ -38,6 +39,17 @@ def new_entry():
                 return render_template("new_entry.html", message=message)
             else:
                 entries.insert_one(entry_data)
-                return render_template("logged_in.html", user_name=session["email"])
+                user_entries = entries.find({"user_id": session["email"]})
+                entries_list = list(user_entries)
+                entries_list.reverse()
+                return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
         
     return render_template("new_entry.html")
+
+def delete_entry(entry_id):
+    if ("email" not in session):
+        return redirect(url_for("login"))
+    entries.delete_one({"_id": ObjectId(entry_id), "user_id": session["email"]})
+    user_entries = entries.find({"user_id": session["email"]})
+
+    return render_template("logged_in.html", user_name=session["email"], entries=list(user_entries))

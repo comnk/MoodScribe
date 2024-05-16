@@ -15,6 +15,7 @@ app.secret_key = "testing"
 
 app.add_url_rule('/logged_in/', view_func=user_routes.logged_in)
 app.add_url_rule('/new_entry/', view_func=user_routes.new_entry, methods=['get', 'post'])
+app.add_url_rule('/delete_entry/<entry_id>', view_func=user_routes.delete_entry, methods=['get', 'post', 'delete'])
 
 client = pymongo.MongoClient(os.environ.get("MONGODB_URI"))
 db = client.get_database("total_records")
