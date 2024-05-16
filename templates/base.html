@@ -6,8 +6,12 @@
     <title>{% block title %}{%endblock %}</title>
 </head>
 <body>
+    {% include 'navbar_visit.html' %}
+
     {% block content %}
 
     {% endblock %}
+
+    {% include 'footer.html' %}
 </body>
 </html>
