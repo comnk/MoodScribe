@@ -1,4 +1,6 @@
 from flask import render_template, redirect, request, url_for, session
+from datetime import datetime
+
 import pymongo
 import os
 
@@ -14,19 +16,28 @@ def logged_in():
         return redirect(url_for("login"))
 
 def new_entry():
-    if ("email" in session):
-        email = session["email"]
-        return render_template("new_entry.html", user_name=email)
-    else:
-        return redirect(url_for("logged_in"))
+    message = ''
 
-def submit_entry():
     if ("email" in session):
-        entry_data = {
-            "user_id":session["email"],
-            "date": request.form.get("date"),
-            "mood": request.form.get("mood"),
-            "content": request.form.get("content")
-        }
+        if (request.method == "POST"):
+            entry_data = {
+                "user_id":session["email"],
+                "date": str(datetime.now()),
+                "number-rating": request.form.get("one-number"),
+                "mood": request.form.get("mood"),
+                "content": request.form.get("content")
+            }
 
-    print("Entry submitted successfully!")
+            print(entry_data)
+
+            content_found = entries.find_one({"content":request.form.get("content")})
+
+            if (content_found):
+                message = 'You cannot duplicate entries!'
+                return render_template("new_entry.html", message=message)
+            else:
+                entries.insert_one(entry_data)
+                print("Entry submitted successfully!")
+                return render_template("logged_in.html", user_name=session["email"])
+        
+    return render_template("new_entry.html")
