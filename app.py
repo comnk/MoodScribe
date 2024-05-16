@@ -3,16 +3,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from flask import Flask, render_template, request, url_for, redirect, session
-import pymongo
+from flask_login import login_required, LoginManager
+
 import bcrypt
 import os
+import pymongo
+import user_routes
 
 app = Flask(__name__, template_folder = 'templates')
 app.secret_key = "testing"
 
+app.add_url_rule('/logged_in/', view_func=user_routes.logged_in)
+app.add_url_rule('/new_entry/', view_func=user_routes.new_entry)
+app.add_url_rule('/submit_entry/', view_func=user_routes.submit_entry, methods=['post'])
+
 client = pymongo.MongoClient(os.environ.get("MONGODB_URI"))
 db = client.get_database("total_records")
 records = db.register
+
+user_in_app = False
 
 @app.route("/")
 def index():
@@ -85,14 +94,6 @@ def login():
             return render_template('login.html', message=message)
 
     return render_template('login.html', message=message)
-
-@app.route("/logged_in/")
-def logged_in():
-    if ("email" in session):
-        email = session["email"]
-        return render_template("logged_in.html", user_name=email)
-    else:
-        return redirect(url_for("login"))
 
 @app.route("/logged_out/")
 def logged_out():
