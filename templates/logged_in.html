@@ -3,10 +3,9 @@
 
 {% block content %}
 <p>Hello! You have Logged in as {{ user_name }}!</p>
-<a href="/new_entry/">Create New Entry</a>
-<a href="/logged_out/">Log Out</a>
+
 {% for entry in entries %}
-    <div class="entry" style="border: solid 5px black;">
+    <div class="entry" style="border: solid 2.5px black;">
         <h3>Date: {{ entry.date }}</h3>
         <p>Mood Rating: {{ entry.rating }}</p>
         <p>Mood: {{ entry.mood }}</p>

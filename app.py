@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, url_for, redirect, session
+from dotenv import load_dotenv
 
 import bcrypt
 import os
 import pymongo
 import user_routes
+
+load_dotenv()
 
 app = Flask(__name__, template_folder = 'templates')
 app.secret_key = "testing"
@@ -16,8 +19,7 @@ app.add_url_rule('/delete_entry/<entry_id>', view_func=user_routes.delete_entry,
 client = pymongo.MongoClient(os.environ.get("MONGODB_URI"))
 db = client.get_database("total_records")
 records = db.register
-
-user_in_app = False
+entries = db.entries
 
 @app.route("/")
 def index():
@@ -28,7 +30,11 @@ def registration():
     message = ''
 
     if ("email" in session):
-        return redirect(url_for("logged_in", user_in_app=True))
+        user_entries = entries.find({"user_id": session["email"]})
+        entries_list = list(user_entries)
+        entries_list.reverse()
+        return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
+    
     if (request.method == "POST"):
         user = request.form.get("fullname")
         email = request.form.get("email")
@@ -57,7 +63,7 @@ def registration():
             user_name = records.find_one({"name":user})
             new_user = user_name["name"]
 
-            return render_template("logged_in.html", user_name=new_user, user_in_app=True)
+            return render_template("logged_in.html", user_name=new_user)
 
     return render_template('registration.html')
 
@@ -66,7 +72,10 @@ def login():
     message = 'Please log into account'
 
     if ("email" in session):
-        return redirect(url_for("logged_in", user_in_app=True))
+        user_entries = entries.find({"user_id": session["email"]})
+        entries_list = list(user_entries)
+        entries_list.reverse()
+        return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
     
     if (request.method == "POST"):
         email = request.form.get("email")
@@ -79,7 +88,7 @@ def login():
 
             if (bcrypt.checkpw(password.encode('utf-8'), password_check)):
                 session['email'] = email_val
-                return redirect(url_for("logged_in", user_name=email_val, user_in_app=True))
+                return redirect(url_for("logged_in", user_name=email_val))
             else:
                 if (email in session):
                     return redirect(url_for("logged_in"))

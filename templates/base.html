@@ -9,11 +9,31 @@
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-    {% if user_in_app  %}
-        {% include 'navbar_visit.html' %}
-    {% else %}
-        {% include 'navbar_visit.html' %}
-    {% endif %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        {% if 'email' in session %}
+            <a class="navbar-brand" href="{{ url_for('logged_in') }}">MoodScribe</a>
+        {% else %}
+            <h1><a class="navbar-brand" href="/">MoodScribe</a></h1>
+        {% endif %}
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if 'email' in session %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/new_entry/">Create New Entry</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logged_out/">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registration/">Sign Up</a>
+                    </li>
+                {% endif %}
+        </ul>
+    </nav>
 
     {% block content %}
 

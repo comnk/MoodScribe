@@ -5,6 +5,9 @@ from bson import ObjectId
 import pymongo
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 client = pymongo.MongoClient(os.environ.get("MONGODB_URI"))
 db = client.get_database("total_records")
 entries = db.entries
@@ -12,12 +15,15 @@ entries = db.entries
 def logged_in():
     if ("email" in session):
         email = session["email"]
-        user_entries = entries.find({"user_id": email})
+        user_entries = entries.find({"user_id": session["email"]})
         entries_list = list(user_entries)
         entries_list.reverse()
         return render_template("logged_in.html", user_name=email, entries=entries_list)
     else:
         return redirect(url_for("login"))
+
+def user_profile_settings():
+    return "HEEEE"
 
 def new_entry():
     message = ''
@@ -71,7 +77,7 @@ def delete_entry(entry_id):
     if ("email" not in session):
         return redirect(url_for("login"))
     entries.delete_one({"_id": ObjectId(entry_id), "user_id": session["email"]})
-    user_entries = list(entries.find({"user_id": session["email"]}))
-    user_entries.reverse()
+    entries_list = list(entries.find({"user_id": session["email"]}))
+    entries_list.reverse()
 
-    return render_template("logged_in.html", user_name=session["email"], entries=user_entries)
+    return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
