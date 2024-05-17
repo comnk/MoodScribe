@@ -1,12 +1,9 @@
 from flask import Flask, render_template, request, url_for, redirect, session
-from dotenv import load_dotenv
 
 import bcrypt
 import os
 import pymongo
 import user_routes
-
-load_dotenv()
 
 app = Flask(__name__, template_folder = 'templates')
 app.secret_key = "testing"
