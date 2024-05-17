@@ -36,7 +36,7 @@ def new_entry():
 
             if (content_found):
                 message = 'You cannot create duplicate entries!'
-                return render_template("new_entry.html", message=message)
+                return render_template("entry_form.html", message=message)
             else:
                 entries.insert_one(entry_data)
                 user_entries = entries.find({"user_id": session["email"]})
@@ -44,12 +44,34 @@ def new_entry():
                 entries_list.reverse()
                 return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
         
-    return render_template("new_entry.html")
+    return render_template("entry_form.html")
+
+def edit_entry(entry_id):
+    entry = entries.find_one({"_id": ObjectId(entry_id), "user_id": session["email"]})
+
+    if ("email" in session):
+        if (request.method == "POST"):
+            entry_data = {
+            "user_id": session["email"],
+            "date": str(datetime.now()),
+            "rating": request.form.get("one-number"),
+            "mood": request.form.get("mood"),
+            "content": request.form.get("content")
+            }
+
+            entries.update_one({"_id": ObjectId(entry_id)}, {"$set": entry_data})
+            user_entries = entries.find({"user_id": session["email"]})
+            entries_list = list(user_entries)
+            entries_list.reverse()
+            return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
+    
+    return render_template("entry_form.html", entry=entry)
 
 def delete_entry(entry_id):
     if ("email" not in session):
         return redirect(url_for("login"))
     entries.delete_one({"_id": ObjectId(entry_id), "user_id": session["email"]})
-    user_entries = entries.find({"user_id": session["email"]})
+    user_entries = list(entries.find({"user_id": session["email"]}))
+    user_entries.reverse()
 
-    return render_template("logged_in.html", user_name=session["email"], entries=list(user_entries))
+    return render_template("logged_in.html", user_name=session["email"], entries=user_entries)

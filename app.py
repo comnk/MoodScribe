@@ -1,20 +1,19 @@
-from dotenv import load_dotenv
-
-load_dotenv()
-
 from flask import Flask, render_template, request, url_for, redirect, session
-from flask_login import login_required, LoginManager
+from dotenv import load_dotenv
 
 import bcrypt
 import os
 import pymongo
 import user_routes
 
+load_dotenv()
+
 app = Flask(__name__, template_folder = 'templates')
 app.secret_key = "testing"
 
 app.add_url_rule('/logged_in/', view_func=user_routes.logged_in)
 app.add_url_rule('/new_entry/', view_func=user_routes.new_entry, methods=['get', 'post'])
+app.add_url_rule('/edit_entry/<entry_id>', view_func=user_routes.edit_entry, methods=['get', 'post', 'delete'])
 app.add_url_rule('/delete_entry/<entry_id>', view_func=user_routes.delete_entry, methods=['get', 'post', 'delete'])
 
 client = pymongo.MongoClient(os.environ.get("MONGODB_URI"))
