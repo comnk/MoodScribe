@@ -25,7 +25,6 @@ def logged_in():
 
 def user_profile_settings():
     user = records.find_one({"email":session["email"]})
-    print(user)
 
     if ("email" in session):
         if (request.method == "POST"):
@@ -58,8 +57,16 @@ def user_profile_settings():
                 #    user_data["password"] = user_found["password"]
                 #else:
                 #    user_data["password"] = password1
-                
+
                 records.update_one({"email": session["email"]}, {"$set": user_data})
+
+                entries.update_many(
+                    {"user_id": session["email"]}, 
+                    {"$set": {"user_id": request.form.get("email")}}
+                )
+
+                session["email"] = request.form.get("email")
+
                 user_entries = entries.find({"user_id": session["email"]})
                 entries_list = list(user_entries)
                 entries_list.reverse()
