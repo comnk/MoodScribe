@@ -2,16 +2,23 @@
 {% block title %}Hello {{user_name}}!{% endblock %}
 
 {% block content %}
-<p>Hello! You have Logged in as {{ user_name }}!</p>
-
-{% for entry in entries %}
-    <div class="entry" style="border: solid 2.5px black;">
-        <h3>Date: {{ entry.date }}</h3>
-        <p>Mood Rating: {{ entry.rating }}</p>
-        <p>Mood: {{ entry.mood }}</p>
-        <p>{{ entry.content }}</p>
-        <a href="{{ url_for('edit_entry', entry_id=entry._id) }}" class="btn btn-primary">Edit Entry</a>
-        <a href="{{ url_for('delete_entry', entry_id=entry._id) }}" class="btn btn-danger">Delete Entry</a>
+<div class="container" style="height: 600px; overflow-y: scroll;">
+    <p>Hello! You have Logged in as {{ user_name }}!</p>
+    <div class="row">
+        {% for entry in entries %}
+            <div class="col-md-4 mb-4">
+                <div class="card" style="border: solid 2.5px black;">
+                    <div class="text">
+                        <h3>Date: {{ entry.date }}</h3>
+                        <p>Mood Rating: {{ entry.rating }}</p>
+                        <p>Mood: {{ entry.mood }}</p>
+                        <p>{{ entry.content }}</p>
+                    </div>
+                    <a href="{{ url_for('edit_entry', entry_id=entry._id) }}" class="btn btn-primary">Edit Entry</a>
+                    <a href="{{ url_for('delete_entry', entry_id=entry._id) }}" class="btn btn-danger">Delete Entry</a>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
+</div>
 {% endblock %}

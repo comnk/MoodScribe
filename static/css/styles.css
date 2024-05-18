@@ -1,0 +1,18 @@
+body {
+    background-color: bisque;
+}
+
+.text {
+    margin-top: 3%;
+    margin-left: 3%;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 1rem 0;
+}

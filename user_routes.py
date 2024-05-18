@@ -40,7 +40,7 @@ def user_profile_settings():
                 message = 'There is a user already with that name!'
                 return render_template("user_profile.html", user=user, message=message)
             
-            if (email_found):
+            if (email_found and email != session["email"]):
                 message = 'This email already exists in the database!'
                 return render_template("user_profile.html", user=user, message=message)
             

@@ -25,6 +25,12 @@ records = db.register
 
 @app.route("/")
 def index():
+    if ("email" in session):
+        user_entries = entries.find({"user_id": session["email"]})
+        entries_list = list(user_entries)
+        entries_list.reverse()
+        return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
+
     return render_template('landing_page.html')
 
 @app.route("/registration/", methods=['get', 'post'])
