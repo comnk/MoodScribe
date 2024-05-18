@@ -5,6 +5,7 @@ import bcrypt
 import os
 import pymongo
 import user_routes
+import edit_entry
 
 load_dotenv()
 
@@ -12,14 +13,15 @@ app = Flask(__name__, template_folder = 'templates')
 app.secret_key = "testing"
 
 app.add_url_rule('/logged_in/', view_func=user_routes.logged_in)
-app.add_url_rule('/new_entry/', view_func=user_routes.new_entry, methods=['get', 'post'])
-app.add_url_rule('/edit_entry/<entry_id>', view_func=user_routes.edit_entry, methods=['get', 'post', 'delete'])
-app.add_url_rule('/delete_entry/<entry_id>', view_func=user_routes.delete_entry, methods=['get', 'post', 'delete'])
+app.add_url_rule('/new_entry/', view_func=edit_entry.new_entry, methods=['get', 'post'])
+app.add_url_rule('/edit_profile/', view_func=user_routes.user_profile_settings, methods=['get', 'post'])
+app.add_url_rule('/edit_entry/<entry_id>', view_func=edit_entry.edit_entry, methods=['get', 'post', 'delete'])
+app.add_url_rule('/delete_entry/<entry_id>', view_func=edit_entry.delete_entry, methods=['get', 'post', 'delete'])
 
 client = pymongo.MongoClient(os.environ.get("MONGODB_URI"))
 db = client.get_database("total_records")
-records = db.register
 entries = db.entries
+records = db.register
 
 @app.route("/")
 def index():

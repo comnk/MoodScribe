@@ -11,6 +11,7 @@ load_dotenv()
 client = pymongo.MongoClient(os.environ.get("MONGODB_URI"))
 db = client.get_database("total_records")
 entries = db.entries
+records = db.register
 
 def logged_in():
     if ("email" in session):
@@ -23,61 +24,45 @@ def logged_in():
         return redirect(url_for("login"))
 
 def user_profile_settings():
-    return "HEEEE"
-
-def new_entry():
-    message = ''
+    user = records.find_one({"email":session["email"]})
+    print(user)
 
     if ("email" in session):
         if (request.method == "POST"):
-            entry_data = {
-                "user_id": session["email"],
-                "date": str(datetime.now()),
-                "rating": request.form.get("one-number"),
-                "mood": request.form.get("mood"),
-                "content": request.form.get("content")
-            }
+            user_name = request.form.get("fullname")
+            email = request.form.get("email")
+            password1 = request.form.get("password1")
+            password2 = request.form.get("password2")
 
-            content_found = entries.find_one({"content":request.form.get("content")})
+            user_found = records.find_one({"name":user_name})
+            email_found = records.find_one({"email":email})
 
-            if (content_found):
-                message = 'You cannot create duplicate entries!'
-                return render_template("entry_form.html", message=message)
+            if (user_found):
+                message = 'There is a user already with that name!'
+                return render_template("user_profile.html", user=user, message=message)
+            
+            if (email_found):
+                message = 'This email already exists in the database!'
+                return render_template("user_profile.html", user=user, message=message)
+            
+            if (password1 != password2 and password1 != "" and password2 != ""):
+                message = 'Passwords must match!'
+                return render_template("user_profile.html", user=user, message=message)
+            
             else:
-                entries.insert_one(entry_data)
+                user_data = {
+                "name": request.form.get("fullname"),
+                "email": request.form.get("email")}
+
+                #if (password1 == ""):
+                #    user_data["password"] = user_found["password"]
+                #else:
+                #    user_data["password"] = password1
+                
+                records.update_one({"email": session["email"]}, {"$set": user_data})
                 user_entries = entries.find({"user_id": session["email"]})
                 entries_list = list(user_entries)
                 entries_list.reverse()
                 return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
-        
-    return render_template("entry_form.html")
-
-def edit_entry(entry_id):
-    entry = entries.find_one({"_id": ObjectId(entry_id), "user_id": session["email"]})
-
-    if ("email" in session):
-        if (request.method == "POST"):
-            entry_data = {
-            "user_id": session["email"],
-            "date": str(datetime.now()),
-            "rating": request.form.get("one-number"),
-            "mood": request.form.get("mood"),
-            "content": request.form.get("content")
-            }
-
-            entries.update_one({"_id": ObjectId(entry_id)}, {"$set": entry_data})
-            user_entries = entries.find({"user_id": session["email"]})
-            entries_list = list(user_entries)
-            entries_list.reverse()
-            return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
     
-    return render_template("entry_form.html", entry=entry)
-
-def delete_entry(entry_id):
-    if ("email" not in session):
-        return redirect(url_for("login"))
-    entries.delete_one({"_id": ObjectId(entry_id), "user_id": session["email"]})
-    entries_list = list(entries.find({"user_id": session["email"]}))
-    entries_list.reverse()
-
-    return render_template("logged_in.html", user_name=session["email"], entries=entries_list)
+    return render_template("user_profile.html", user=user)
