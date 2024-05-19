@@ -1,6 +1,4 @@
 from flask import render_template, redirect, request, url_for, session
-from datetime import datetime
-from bson import ObjectId
 
 import pymongo
 import os
@@ -53,10 +51,8 @@ def user_profile_settings():
                 "name": request.form.get("fullname"),
                 "email": request.form.get("email")}
 
-                #if (password1 == ""):
-                #    user_data["password"] = user_found["password"]
-                #else:
-                #    user_data["password"] = password1
+                if (password1 != ""):
+                    user_data["password"] = password1
 
                 records.update_one({"email": session["email"]}, {"$set": user_data})
 

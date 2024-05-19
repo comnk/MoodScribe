@@ -4,8 +4,7 @@ from dotenv import load_dotenv
 import bcrypt
 import os
 import pymongo
-import user_routes
-import edit_entry
+import edit_entry, user_routes, user_data
 
 load_dotenv()
 
@@ -17,6 +16,7 @@ app.add_url_rule('/new_entry/', view_func=edit_entry.new_entry, methods=['get', 
 app.add_url_rule('/edit_profile/', view_func=user_routes.user_profile_settings, methods=['get', 'post'])
 app.add_url_rule('/edit_entry/<entry_id>', view_func=edit_entry.edit_entry, methods=['get', 'post', 'delete'])
 app.add_url_rule('/delete_entry/<entry_id>', view_func=edit_entry.delete_entry, methods=['get', 'post', 'delete'])
+app.add_url_rule('/analyze_data/', view_func=user_data.user_sentiment_scores, methods=['get', 'post', 'delete'])
 
 client = pymongo.MongoClient(os.environ.get("MONGODB_URI"))
 db = client.get_database("total_records")

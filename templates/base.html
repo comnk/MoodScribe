@@ -8,13 +8,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" 
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         {% if 'email' in session %}
-            <a class="navbar-brand" href="{{ url_for('logged_in') }}">MoodScribe</a>
+            <h1><a class="navbar-brand" href="{{ url_for('logged_in') }}">MoodScribe</a></h1>
         {% else %}
-            <h1><a class="navbar-brand" href="/">MoodScribe</a></h1>
+            <h1><b><a class="navbar-brand" href="/">MoodScribe</a></b></h1>
         {% endif %}
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
@@ -23,10 +26,17 @@
                         <a class="nav-link" href="/new_entry/">Create New Entry</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('user_profile_settings') }}">Profile</a>
+                        <div class="dropdown">
+                            <a class="dropbtn nav-link" href="#">Dropdown</a>
+                            <div class="dropdown-content">
+                                <a class="nav-link" href="{{ url_for('user_profile_settings') }}">Profile</a>
+                                <a class="nav-link" href="/logged_out/">Logout</a>
+                            </div>
+                          </div>
+                        
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logged_out/">Logout</a>
+                        
                     </li>
                 {% else %}
                     <li class="nav-item">
