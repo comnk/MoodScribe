@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", function() {
     let negativeCount = 0;
 
     sentimentData.forEach(entry => {
-        if (entry.sentiment > 0) {
+        if (entry.sentiment >= 0.5) {
             positiveCount++;
-        } else if (entry.sentiment === 0) {
+        } else if (entry.sentiment >= -0.5 && entry.sentiment < 0.5) {
             neutralCount++;
         } else {
             negativeCount++;
