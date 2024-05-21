@@ -2,6 +2,7 @@ from flask import render_template, redirect, request, url_for, session
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 import pymongo
+import json
 import os
 
 from dotenv import load_dotenv
@@ -18,8 +19,13 @@ def user_sentiment_scores():
         email = session["email"]
         user_entries = entries.find({"user_id": email})
         entries_list = list(user_entries)
+        display_data = []
 
         for entry in entries_list:
-            sentence = "Today, {} feels like a {}/10, his emotion word is '{}' and he said this: '{}'".format(email, entry.rating, entry.mood, entry.content)
+            sentence = "Today, {} feels like a {}/10, his emotion word is '{}' and he said this: '{}'".format(email, entry["rating"], entry["mood"], entry["content"])
             vs = analyzer.polarity_scores(sentence)
-            print("{:-<65} {}".format(sentence, str(vs)))
+            display_data.append({"date":entry["date"].split(" ")[0], "sentiment":vs["compound"]})
+        
+        print(display_data)
+    
+    return render_template("analyze_data.html", data=display_data)

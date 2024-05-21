@@ -9,9 +9,9 @@
             <div class="col-md-4 mb-4">
                 <div class="card" style="border: solid 2.5px black;">
                     <div class="text">
-                        <h3>Date: {{ entry.date }}</h3>
-                        <p>Mood Rating: {{ entry.rating }}</p>
-                        <p>Mood: {{ entry.mood }}</p>
+                        <h3><b>Date:</b> {{ entry.date }}</h3>
+                        <p><b>Mood Rating:</b> {{ entry.rating }}</p>
+                        <p><b>Mood:</b> {{ entry.mood }}</p>
                         <p>{{ entry.content }}</p>
                     </div>
                     <a href="{{ url_for('edit_entry', entry_id=entry._id) }}" class="btn btn-primary">Edit Entry</a>

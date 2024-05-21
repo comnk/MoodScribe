@@ -34,7 +34,7 @@ def user_profile_settings():
             user_found = records.find_one({"name":user_name})
             email_found = records.find_one({"email":email})
 
-            if (user_found):
+            if (user_found and user_name != user_found["name"]):
                 message = 'There is a user already with that name!'
                 return render_template("user_profile.html", user=user, message=message)
             

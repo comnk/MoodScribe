@@ -1,1 +1,22 @@
 {% extends "base.html" %}
+{% block title %}Mood Insights Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3 style="margin-bottom: 1.5rem;">Track and understand your mood patterns</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <h4 style="text-decoration-line: underline;">Mood Trends</h2>
+            <canvas id="moodTrendChart" width="400" height="400"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h4 style="text-decoration-line: underline;">Sentiment Distribution</h2>
+            <canvas id="sentimentPieChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+</div>
+<script>
+    var sentimentData = {{ data | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}
