@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const negativePercentage = (negativeCount / totalCount) * 100;
     
     const sentimentCtx = document.getElementById('sentimentPieChart').getContext('2d');
-
+    
     const chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 x: {
                     title: {
@@ -88,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }]
         },
         options: {
+            responsive: true,
             plugins: {
                 legend: {
                     position: 'top'
