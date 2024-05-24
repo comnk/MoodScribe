@@ -90,13 +90,10 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     position: 'top'
-                },
-                title: {
-                    display: true,
-                    text: 'Sentiment Distribution'
                 }
             }
         }

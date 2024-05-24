@@ -1,24 +1,39 @@
-{% extends "base.html" %}
-{% block title %}Mood Insights Dashboard{% endblock %}
-
+{% extends "base.html" %} {% block title %}Mood Insights Dashboard{% endblock %}
 {% block content %}
-<div class="container" style="height: 600px; overflow-y: scroll;">
-    <h3 style="margin-bottom: 1.5rem;">Track and understand your mood patterns</h3>
-    <div class="row">
-        <div class="col-md-6">
-            <h4 style="text-decoration-line: underline;">Mood Trends</h2>
-            <canvas id="moodTrendChart" width="200px" height="200px"></canvas>
-        </div>
-        <div class="col-md-6">
-            <h4 style="text-decoration-line: underline;">Sentiment Distribution</h2>
-            <canvas id="sentimentPieChart" width="200" height="200"></canvas>
-        </div>
+<div class="container" style="overflow-y: scroll">
+  <h3 style="margin-bottom: 1.5rem">Track and understand your mood patterns</h3>
+  <div class="row" style="position: relative; margin-bottom: 3rem">
+    <div class="col-md-6">
+      <h4 style="text-decoration-line: underline">Mood Trends</h4>
+      <canvas id="moodTrendChart"></canvas>
     </div>
-    <p><b>Average Sentiment Score: </b>{{ stats.mean }}</p>
-    <p><b>Variance: </b>{{ stats.variance }}</p>
+    <div class="col-md-6" style="position: relative; height: 15vw">
+      <h4 style="text-decoration-line: underline">Sentiment Distribution</h4>
+      <canvas id="sentimentPieChart"></canvas>
+    </div>
+  </div>
+  <p><b>Average Sentiment Score: </b>{{ stats.mean }}</p>
+  <p><b>Variance: </b>{{ stats.variance }}</p>
+  <p style="text-decoration: underline">
+    <b>Understanding Your Mood Insights:</b>
+  </p>
+  <p>
+    <b>Average Sentiment Score:</b> This score reflects your overall mood based
+    on your journal entries. A positive average score means you’re generally
+    feeling good, while a negative average score suggests you might be
+    experiencing more negative emotions. For example, an average score of 0.75
+    indicates a generally positive mood.
+  </p>
+  <p>
+    <b>Mood Variance:</b> This metric shows how much your mood fluctuates. A
+    high variance means your emotions are varying significantly, indicating
+    possible mood swings. A low variance means your mood is stable and
+    consistent. For example, a variance of 0.2 suggests your mood doesn’t
+    fluctuate much, indicating stability.
+  </p>
 </div>
 <script>
-    var sentimentData = {{ data | safe }};
+  var sentimentData = {{ data | safe }};
 </script>
 <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
 {% endblock %}
